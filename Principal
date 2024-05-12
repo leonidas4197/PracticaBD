@@ -1,0 +1,127 @@
+package org.openjfx.ExamenFX;
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import Funciones.Funciones;
+
+public class Principal extends Application {
+
+    @Override
+    public void start(Stage stage) {
+        // Creamos el panel principal
+        BorderPane pnlDistribucion = new BorderPane();
+
+        // ZONA SUPERIOR MENU
+        Label lblMenu = new Label("Menu");
+
+        // Barra de menus principal
+        MenuBar barraMenu = new MenuBar();
+
+        // Menus que van en la barra de menus
+        Menu mArchivo = new Menu("Archivo");
+        Menu mComponentes = new Menu("Componentes");
+        Menu mAyuda = new Menu("Ayuda");
+
+        // Creamos las opciones que estarán dentro de cada menu
+        MenuItem ICargar = new MenuItem("Cargar");
+        MenuItem IGuardar = new MenuItem("Guardar");
+        MenuItem ISalir = new MenuItem("Salir");
+
+        MenuItem ITarjetas = new MenuItem("Tarjetas Graficas");
+        MenuItem IMicroprocesadores = new MenuItem("Microprocesadores");
+        MenuItem IMemoria = new MenuItem("Memoria");
+
+        MenuItem IAcerca = new MenuItem("Acerca de");
+        MenuItem IContacto = new MenuItem("Contacto");
+        
+     // Asignamos los eventos a las opciones del menú
+        
+        //Este evento hara que el botón salir te saque de la aplicación
+        ISalir.setOnAction(e -> System.exit(0)); 
+        
+        //Este evento hara que el botón cargar llame a la clase cargar componente de nuestro 
+        //ComponenteDAO el cual cargara los componentes
+        //ICargar.setOnAction(e -> cargarComponentes());
+        
+        //Este evento guardara
+        //IGuardar.setOnAction(e -> Guardar());
+        
+        //Este evento cargara
+        //ICargar.setOnAction(e -> Cargar());
+        
+        //Este evento mostrara solo las Graficas
+        //ITarjetas.setOnAction(e -> MostrarGraficas());
+
+        //Este evento mostrara solo las Microprocesadores
+        //IMicroprocesadores.setOnAction(e -> MostrarMicroprocesadores());
+        
+        //Este evento mostrara solo las Memorias
+        //IMemorias.setOnAction(e -> MostrarMemorias());
+        
+        //Este evento abrira una ventana en la que te de informacion acerca de la aplicacion
+        IAcerca.setOnAction(e -> Funciones.mostrarAcercaDe(stage));
+        
+        //Este evento abrira una ventana en la que te dara la informacion de con quien contactar
+        IContacto.setOnAction(e -> Funciones.mostrarFormularioContacto());
+        
+        // Asignamos los items a los respectivos menus
+        mArchivo.getItems().addAll(ICargar, IGuardar, ISalir);
+        mComponentes.getItems().addAll(ITarjetas, IMicroprocesadores, IMemoria);
+        mAyuda.getItems().addAll(IAcerca, IContacto);
+
+        // Agregar los menus a la barra de menu
+        barraMenu.getMenus().addAll(mArchivo, mComponentes, mAyuda);
+
+        // Agregar la barra de menu al panel principal
+        pnlDistribucion.setTop(barraMenu);
+
+        // Creamos el TabPane
+        TabPane tabPane = new TabPane();
+        
+        //Creamos las pestañas de nuestra aplicación
+        Tab tab1 = new Tab("Lista de elementos");
+        Tab tab2 = new Tab("Detalle");
+
+     // Creamos un botón para mostrar la segunda pestaña
+        Button btnEditar = new Button("Editar");
+        btnEditar.setOnAction(e -> tabPane.getSelectionModel().select(tab2));
+
+        // Creamos un VBox para contener el botón
+        VBox vbox = new VBox(btnEditar);
+
+        // Creamos un VBox para contener el botón y el contenido de la primera pestaña
+        VBox content1 = new VBox(new Label("Contenido de la Pestaña 1"), vbox);
+
+        // Agregamos contenido a la primera pestaña
+        tab1.setContent(content1);
+
+        // Agregamos la segunda pestaña sin contenido inicialmente
+        tabPane.getTabs().add(tab1);
+        tabPane.getTabs().add(tab2);
+
+        // Agregamos el TabPane al centro del BorderPane
+        pnlDistribucion.setCenter(tabPane);
+
+        // Configurar la escena
+        Scene scene = new Scene(pnlDistribucion, 400, 300);
+
+        // Configurar el escenario
+        stage.setScene(scene);
+        stage.setTitle("Ejemplo de Menú con Pestañas");
+        stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}

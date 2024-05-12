@@ -1,0 +1,37 @@
+package Funciones;
+
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+public class Funciones {
+
+	  public static void mostrarAcercaDe(Stage primaryStage) {
+	        // Crear una nueva ventana para mostrar la información "Acerca de"
+	        Stage aboutStage = new Stage();
+	        aboutStage.initModality(Modality.APPLICATION_MODAL);
+	        aboutStage.initOwner(primaryStage);
+	        aboutStage.setTitle("Acerca de");
+	        
+	        VBox vbox = new VBox(new Text("Información sobre la aplicación"));
+	        Scene scene = new Scene(vbox, 300, 200);
+	        aboutStage.setScene(scene);
+	        aboutStage.show();
+	    }
+
+	    public static void mostrarFormularioContacto() {
+	        // Crear una nueva ventana para mostrar el formulario de contacto
+	        Stage contactStage = new Stage();
+	        contactStage.initModality(Modality.APPLICATION_MODAL);
+	        contactStage.setTitle("Contacto");
+	        
+	        VBox vbox = new VBox(new Label("Formulario de contacto"));
+	        Scene scene = new Scene(vbox, 300, 200);
+	        contactStage.setScene(scene);
+	        contactStage.show();
+	    }
+}
+

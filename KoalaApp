@@ -1,0 +1,73 @@
+package org.openjfx.ExamenFX;
+
+import Model.KoalaDO;
+import Utils.KoalaDAO;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class KoalaApp extends Application {
+
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Koala Viewer");
+
+        // Crear un TabPane para manejar múltiples pestañas
+        TabPane tabPane = new TabPane();
+
+        // Crear una pestaña para mostrar los detalles del Koala
+        Tab detallesTab = new Tab("Detalles");
+        VBox detallesBox = new VBox();
+        detallesTab.setContent(detallesBox);
+        tabPane.getTabs().add(detallesTab);
+
+        // Crear una cuadrícula para organizar los elementos en la pestaña de detalles
+        GridPane detallesGrid = new GridPane();
+        detallesGrid.setHgap(10);
+        detallesGrid.setVgap(10);
+        detallesBox.getChildren().add(detallesGrid);
+
+        // Obtener el KoalaDO desde la base de datos
+        KoalaDO koala = KoalaDAO.obtenerKoalaPorId(1); // Suponiendo que deseas obtener el Koala con ID 1
+
+        // Mostrar los datos del KoalaDO en la pestaña de detalles
+        Label idLabel = new Label("ID:");
+        detallesGrid.add(idLabel, 0, 0);
+        Label idValue = new Label(String.valueOf(koala.getIdKoala()));
+        detallesGrid.add(idValue, 1, 0);
+
+        Label nombreLabel = new Label("Nombre:");
+        detallesGrid.add(nombreLabel, 0, 1);
+        Label nombreValue = new Label(koala.getNombre());
+        detallesGrid.add(nombreValue, 1, 1);
+
+        // Agregar el botón de editar en la pestaña de detalles
+        Button editarButton = new Button("Editar");
+        detallesGrid.add(editarButton, 2, 1);
+
+        // Configurar la acción del botón de editar
+        editarButton.setOnAction(event -> {
+            // Abrir una nueva pestaña para la edición del Koala
+            Tab editarTab = new Tab("Editar");
+            // Aquí deberías crear la interfaz de edición del Koala
+            // Por ahora, solo agregaremos un mensaje en la pestaña de edición
+            TextArea textArea = new TextArea("Interfaz de edición del Koala");
+            VBox editarBox = new VBox(textArea);
+            editarTab.setContent(editarBox);
+            tabPane.getTabs().add(editarTab);
+            tabPane.getSelectionModel().select(editarTab);
+        });
+
+        // Mostrar el TabPane en la ventana
+        Scene scene = new Scene(tabPane, 400, 200);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}

@@ -1,0 +1,42 @@
+package Utils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import Model.KoalaDO;
+
+public class KoalaDAO {
+
+    public static KoalaDO obtenerKoalaPorId(int id) {
+        try {
+            Connection con = UtilsBD.conectarBD();
+            String sql = "SELECT * FROM Koala WHERE idKoala = ?";
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return crearKoalaDesdeResultSet(resultSet);
+            }
+        } catch (Exception excepcion) {
+            excepcion.printStackTrace();
+        }
+        return null;
+    }
+
+    private static KoalaDO crearKoalaDesdeResultSet(ResultSet resultSet) throws Exception {
+        return new KoalaDO(
+                resultSet.getInt("idKoala"),
+                resultSet.getString("Nombre"),
+                resultSet.getString("NickGuerra"),
+                resultSet.getInt("Edad"),
+                resultSet.getString("Color"),
+                resultSet.getInt("Fuerza"),
+                resultSet.getInt("Inteligencia"),
+                resultSet.getInt("HorasSueno"),
+                resultSet.getInt("TiempoBerserk"),
+                resultSet.getInt("Avestruz_idAvestruz"),
+                resultSet.getInt("CarritoGolf_idCarritoGolf")
+        );
+    }
+}

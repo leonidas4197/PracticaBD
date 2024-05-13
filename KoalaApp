@@ -52,10 +52,21 @@ public class KoalaApp extends Application {
         editarButton.setOnAction(event -> {
             // Abrir una nueva pestaña para la edición del Koala
             Tab editarTab = new Tab("Editar");
-            // Aquí deberías crear la interfaz de edición del Koala
-            // Por ahora, solo agregaremos un mensaje en la pestaña de edición
-            TextArea textArea = new TextArea("Interfaz de edición del Koala");
-            VBox editarBox = new VBox(textArea);
+
+            // Crear una cuadrícula para mostrar todos los datos del Koala en la pestaña de edición
+            GridPane editarGrid = new GridPane();
+            editarGrid.setHgap(10);
+            editarGrid.setVgap(10);
+
+            // Mostrar todos los datos del Koala
+            int row = 0;
+            editarGrid.addRow(row++, new Label("ID:"), new Label(String.valueOf(koala.getIdKoala())));
+            editarGrid.addRow(row++, new Label("Nombre:"), new Label(koala.getNombre()));
+            editarGrid.addRow(row++, new Label("Nick de Guerra:"), new Label(koala.getNickGuerra()));
+            editarGrid.addRow(row++, new Label("Edad:"), new Label(String.valueOf(koala.getEdad())));
+            // Agrega más filas para mostrar otros atributos del Koala
+
+            VBox editarBox = new VBox(editarGrid);
             editarTab.setContent(editarBox);
             tabPane.getTabs().add(editarTab);
             tabPane.getSelectionModel().select(editarTab);

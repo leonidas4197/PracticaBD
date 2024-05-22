@@ -1,124 +1,118 @@
 package org.openjfx.ExamenFX;
 
+import Utils.UtilsBD;
+import Model.AvestruzDO;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import Funciones.Funciones;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Principal extends Application {
 
+    private ChoiceBox<AvestruzDO> avestruzChoiceBox; // Declaración del ChoiceBox como un campo de clase
+
     @Override
-    public void start(Stage stage) {
-        // Creamos el panel principal
-        BorderPane pnlDistribucion = new BorderPane();
+    public void start(Stage primaryStage) {
+        try {
+            primaryStage.setTitle("Avestruces Selector");
 
-        // ZONA SUPERIOR MENU
-        Label lblMenu = new Label("Menu");
+            // Crear la barra de menú
+            MenuBar menuBar = new MenuBar();
 
-        // Barra de menus principal
-        MenuBar barraMenu = new MenuBar();
+            // Menú Archivo
+            Menu menuFile = new Menu("Archivo");
+            MenuItem cargarMenuItem = new MenuItem("Cargar");
+            MenuItem salirMenuItem = new MenuItem("Salir");
+            menuFile.getItems().addAll(cargarMenuItem, new SeparatorMenuItem(), salirMenuItem);
 
-        // Menus que van en la barra de menus
-        Menu mArchivo = new Menu("Archivo");
-        Menu mComponentes = new Menu("Componentes");
-        Menu mAyuda = new Menu("Ayuda");
+            // Menú Avestruz
+            Menu menuAvestruz = new Menu("Avestruces");
+            MenuItem eliminarMenuItem = new MenuItem("Eliminar");
+            MenuItem cargarAvestruzMenuItem = new MenuItem("Cargar");
+            menuAvestruz.getItems().addAll(eliminarMenuItem, cargarAvestruzMenuItem);
 
-        // Creamos las opciones que estarán dentro de cada menu
-        MenuItem ICargar = new MenuItem("Cargar");
-        MenuItem IGuardar = new MenuItem("Guardar");
-        MenuItem ISalir = new MenuItem("Salir");
+            // Menú Koalas
+            Menu menuKoalas = new Menu("Koalas");
+            MenuItem mostrarDatosMenuItem = new MenuItem("Mostrar Datos");
+            menuKoalas.getItems().addAll(mostrarDatosMenuItem);
 
-        MenuItem ITarjetas = new MenuItem("Tarjetas Graficas");
-        MenuItem IMicroprocesadores = new MenuItem("Microprocesadores");
-        MenuItem IMemoria = new MenuItem("Memoria");
+            menuBar.getMenus().addAll(menuFile, menuAvestruz, menuKoalas);
 
-        MenuItem IAcerca = new MenuItem("Acerca de");
-        MenuItem IContacto = new MenuItem("Contacto");
-        
-     // Asignamos los eventos a las opciones del menú
-        
-        //Este evento hara que el botón salir te saque de la aplicación
-        ISalir.setOnAction(e -> System.exit(0)); 
-        
-        //Este evento hara que el botón cargar llame a la clase cargar componente de nuestro 
-        //ComponenteDAO el cual cargara los componentes
-        //ICargar.setOnAction(e -> cargarComponentes());
-        
-        //Este evento guardara
-        //IGuardar.setOnAction(e -> Guardar());
-        
-        //Este evento cargara
-        //ICargar.setOnAction(e -> Cargar());
-        
-        //Este evento mostrara solo las Graficas
-        //ITarjetas.setOnAction(e -> MostrarGraficas());
+            // Crear el ChoiceBox y Label para Avestruz
+            Label avestruzLabel = new Label("Avestruz:");
+            avestruzChoiceBox = new ChoiceBox<>(); // Inicialización del ChoiceBox
+            // No cargamos las avestruces aquí
 
-        //Este evento mostrara solo las Microprocesadores
-        //IMicroprocesadores.setOnAction(e -> MostrarMicroprocesadores());
-        
-        //Este evento mostrara solo las Memorias
-        //IMemorias.setOnAction(e -> MostrarMemorias());
-        
-        //Este evento abrira una ventana en la que te de informacion acerca de la aplicacion
-        IAcerca.setOnAction(e -> Funciones.mostrarAcercaDe(stage));
-        
-        //Este evento abrira una ventana en la que te dara la informacion de con quien contactar
-        IContacto.setOnAction(e -> Funciones.mostrarFormularioContacto());
-        
-        // Asignamos los items a los respectivos menus
-        mArchivo.getItems().addAll(ICargar, IGuardar, ISalir);
-        mComponentes.getItems().addAll(ITarjetas, IMicroprocesadores, IMemoria);
-        mAyuda.getItems().addAll(IAcerca, IContacto);
+            // Layout para el ChoiceBox y Label de Avestruz
+            HBox avestruzLayout = new HBox(10); // Espacio de 10 píxeles entre los nodos
+            avestruzLayout.getChildren().addAll(avestruzLabel, avestruzChoiceBox);
 
-        // Agregar los menus a la barra de menu
-        barraMenu.getMenus().addAll(mArchivo, mComponentes, mAyuda);
+            // Crear el TabPane
+            TabPane tabPane = new TabPane();
+            Tab tab1 = new Tab("Tab 1", new Label("Contenido del Tab 1"));
+            tabPane.getTabs().addAll(tab1);
 
-        // Agregar la barra de menu al panel principal
-        pnlDistribucion.setTop(barraMenu);
+            // Crear el layout principal
+            VBox layout = new VBox(10); // Espacio de 10 píxeles entre los nodos
+            layout.getChildren().addAll(menuBar, avestruzLayout, tabPane);
 
-        // Creamos el TabPane
-        TabPane tabPane = new TabPane();
-        
-        //Creamos las pestañas de nuestra aplicación
-        Tab tab1 = new Tab("Lista de elementos");
-        Tab tab2 = new Tab("Detalle");
+            // Crear la escena y añadir el layout principal
+            Scene scene = new Scene(layout, 600, 400);
+            primaryStage.setScene(scene);
+            primaryStage.show();
 
-     // Creamos un botón para mostrar la segunda pestaña
-        Button btnEditar = new Button("Editar");
-        btnEditar.setOnAction(e -> tabPane.getSelectionModel().select(tab2));
+            // Manejador de eventos para "Cargar" en el menú "Archivo"
+            cargarMenuItem.setOnAction(event -> cargarAvestruces());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-        // Creamos un VBox para contener el botón
-        VBox vbox = new VBox(btnEditar);
+    private void cargarAvestruces() {
+        avestruzChoiceBox.getItems().clear(); // Limpiar cualquier avestruz previamente cargada
+        loadAvestruzData(avestruzChoiceBox); // Cargar las avestruces desde la base de datos
+    }
 
-        // Creamos un VBox para contener el botón y el contenido de la primera pestaña
-        VBox content1 = new VBox(new Label("Contenido de la Pestaña 1"), vbox);
+    private void loadAvestruzData(ChoiceBox<AvestruzDO> choiceBox) {
+        Connection connection = UtilsBD.conectarBD();
+        if (connection != null) {
+            try {
+                String query = "SELECT idAvestruz, Nombre, NickGuerra, Edad, Altura, NivelMalaLeche, NumHuevos FROM avestruz";
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(query);
 
-        // Agregamos contenido a la primera pestaña
-        tab1.setContent(content1);
+                List<AvestruzDO> avestruces = new ArrayList<>();
+                while (resultSet.next()) {
+                    AvestruzDO avestruz = new AvestruzDO(
+                            resultSet.getInt("idAvestruz"),
+                            resultSet.getString("Nombre"),
+                            resultSet.getString("NickGuerra"),
+                            resultSet.getInt("Edad"),
+                            resultSet.getInt("Altura"),
+                            resultSet.getInt("NivelMalaLeche"),
+                            resultSet.getInt("NumHuevos")
+                    );
+                    avestruces.add(avestruz);
+                }
 
-        // Agregamos la segunda pestaña sin contenido inicialmente
-        tabPane.getTabs().add(tab1);
-        tabPane.getTabs().add(tab2);
-
-        // Agregamos el TabPane al centro del BorderPane
-        pnlDistribucion.setCenter(tabPane);
-
-        // Configurar la escena
-        Scene scene = new Scene(pnlDistribucion, 400, 300);
-
-        // Configurar el escenario
-        stage.setScene(scene);
-        stage.setTitle("Ejemplo de Menú con Pestañas");
-        stage.show();
+                choiceBox.getItems().addAll(avestruces);
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("No se pudo establecer conexión con la base de datos.");
+        }
     }
 
     public static void main(String[] args) {
